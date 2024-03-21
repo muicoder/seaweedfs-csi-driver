@@ -42,7 +42,7 @@ spec:
         # SeaweedFs Plugin (controller)
         - name: seaweedfs-csi-plugin
           image: {{.Values.seaweedfsCsiPlugin.image}}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          imagePullPolicy: Always
           args :
             - --endpoint=$(CSI_ENDPOINT)
             - --filer=$(SEAWEEDFS_FILER)

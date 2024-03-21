@@ -1,5 +1,5 @@
 .vscode
 *.iml
-
+.idea
 # go
 __debug_bin
