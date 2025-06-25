@@ -3,6 +3,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: {{ template "seaweedfs-csi-driver.name" . }}-controller
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
@@ -42,7 +43,7 @@ spec:
         # SeaweedFs Plugin (controller)
         - name: seaweedfs-csi-plugin
           image: {{.Values.seaweedfsCsiPlugin.image}}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          imagePullPolicy: IfNotPresent
           args :
             - --endpoint=$(CSI_ENDPOINT)
             - --filer=$(SEAWEEDFS_FILER)
@@ -102,7 +103,6 @@ spec:
             - name: tls
               mountPath: /var/run/secrets/app/tls
            {{- end }}
-          resources: {{ toYaml .Values.controller.resources | nindent 12 }}
 
         # provisioner
         - name: csi-provisioner
@@ -141,7 +141,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          resources: {{ toYaml .Values.csiProvisioner.resources | nindent 12 }}
 
         # resizer
         - name: csi-resizer
@@ -180,7 +179,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          resources: {{ toYaml .Values.csiResizer.resources | nindent 12 }}
 
         {{- if .Values.csiAttacher.enabled }}
         # attacher
@@ -219,7 +217,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          resources: {{ toYaml .Values.csiAttacher.resources | nindent 12 }}
         {{- end }}
 
         # liveness probe
@@ -229,17 +226,16 @@ spec:
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           args:
             - --csi-address=$(ADDRESS)
-            - --http-endpoint=:9808
+            - --http-endpoint=:9898
           env:
             - name: ADDRESS
               value: /var/lib/csi/sockets/pluginproxy/csi.sock
           ports:
-            - containerPort: 9808
+            - containerPort: 9898
               name: livenessprobe
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          resources: {{ toYaml .Values.csiLivenessProbe.resources | nindent 12 }}
         {{- end }}
 
       volumes:
