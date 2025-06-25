@@ -6,15 +6,15 @@ require (
 	github.com/container-storage-interface/spec v1.11.0
 	golang.org/x/net v0.58.0
 	google.golang.org/grpc v1.84.0-dev.0.20260723093437-b6eac429d7b6
-	k8s.io/client-go v0.32.0
+	k8s.io/client-go v0.32.13
 )
 
 require (
 	github.com/seaweedfs/seaweedfs v0.0.0-20260821064632-8a532cc0cffd
 	golang.org/x/sys v0.47.0
-	k8s.io/api v0.32.0
-	k8s.io/apimachinery v0.32.0
-	k8s.io/mount-utils v0.32.0
+	k8s.io/api v0.32.13
+	k8s.io/apimachinery v0.32.13
+	k8s.io/mount-utils v0.32.13
 )
 
 require (

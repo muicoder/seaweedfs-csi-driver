@@ -1,0 +1,30 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: seaweedfs-csi-driver
+spec:
+  chart: seaweedfs-csi-driver
+  createNamespace: true
+  failurePolicy: retry
+  insecureSkipTLSVerify: true
+  repo: https://seaweedfs.github.io/seaweedfs-csi-driver/helm
+  targetNamespace: default
+  valuesContent: |
+    csiAttacher:
+      image: muicoder/csi-attacher:v4.12.0
+    csiLivenessProbe:
+      image: muicoder/livenessprobe:v2.19.0
+    csiNodeDriverRegistrar:
+      image: muicoder/csi-node-driver-registrar:v2.17.0
+    csiProvisioner:
+      image: muicoder/csi-provisioner:v6.3.0
+    csiResizer:
+      image: muicoder/csi-resizer:v2.2.1
+    node:
+      volumes:
+        plugins_dir: /var/lib/kubelet/plugins
+        pods_mount_dir: /var/lib/kubelet/pods
+        registration_dir: /var/lib/kubelet/plugins_registry
+    seaweedfsFiler: SEAWEEDFS_FILER:8888
+    storageClassName: seaweedfs-storage
+  version: 0.2.35
