@@ -3,8 +3,8 @@ kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
   name: {{ .Values.storageClassName }}
-  annotations:
     {{- if .Values.isDefaultStorageClass }}
+  annotations:
     storageclass.kubernetes.io/is-default-class: "true"
     {{- end }}
 provisioner: {{ .Values.driverName }}

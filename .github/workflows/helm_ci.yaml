@@ -2,7 +2,7 @@ name: "helm: lint and test charts"
 
 on:
   push:
-    branches: [ master ]
+    branches: [ masterNot ]
     paths: ['deploy/helm/seaweedfs-csi-driver/**']
   pull_request:
     branches: [ master ]

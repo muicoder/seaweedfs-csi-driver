@@ -1,0 +1,44 @@
+#!/bin/sh
+
+set -e
+
+cd "$(dirname "$(readlink -f "$0")")"
+if grep -n SEAWEEDFS_FILER: deploy/helm/seaweedfs-csi-driver/values.yaml; then
+  echo "Please modify the above SEAWEEDFS_FILER to the address(filer), eg: 1.2.4.8:8888"
+fi
+sed -E "s~chrislusf~muicoder~g;s~registry.k8s.io/sig-storage~longhornio~g;$(wget -qO- https://github.com/longhorn/longhorn/raw/master/deploy/longhorn-images.txt | grep :v | while read -r i; do echo "s~${i%:*}.+~$i~"; done | xargs | sed 's~ ~;~g')" deploy/helm/seaweedfs-csi-driver/values.yaml >t.sed
+mv t.sed deploy/helm/seaweedfs-csi-driver/values.yaml
+helm --namespace kube-system template seaweedfs deploy/helm/seaweedfs-csi-driver >deploy/seaweedfs-csi-driver.yaml
+# helm --namespace kube-system upgrade -i seaweedfs-csi-driver --create-namespace deploy/helm/seaweedfs-csi-driver
+# helm --namespace kube-system uninstall seaweedfs-csi-driver
+cat <<\EOF >deploy/kubernetes/seaweedfs-csi-driver.yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: seaweedfs-csi-driver
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: seaweedfs-storage
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: seaweedfs-csi-driver
+spec:
+  containers:
+    - command: [sleep, inf]
+      image: alpine:3.16
+      name: alpine
+      volumeMounts:
+        - mountPath: /data
+          name: data
+      workingDir: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: seaweedfs-csi-driver
+EOF
