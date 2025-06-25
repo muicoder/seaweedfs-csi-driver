@@ -4,6 +4,7 @@ kind: DaemonSet
 apiVersion: apps/v1
 metadata:
   name: {{ template "seaweedfs-csi-driver.name" . }}-node
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
@@ -35,7 +36,7 @@ spec:
         - name: csi-seaweedfs-plugin
           securityContext: {{ toYaml .Values.seaweedfsCsiPlugin.securityContext | nindent 12 }}
           image: {{.Values.seaweedfsCsiPlugin.image }}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          imagePullPolicy: IfNotPresent
           args:
             - --endpoint=$(CSI_ENDPOINT)
             - --filer=$(SEAWEEDFS_FILER)
@@ -124,7 +125,6 @@ spec:
             {{- end }}
             - name: cache
               mountPath: /var/cache/seaweedfs
-          resources: {{ toYaml .Values.node.resources | nindent 12 }}
 
         # driver registrar
         - name: driver-registrar
@@ -170,7 +170,6 @@ spec:
               mountPath: /csi/
             - name: registration-dir
               mountPath: /registration/
-          resources: {{ toYaml .Values.csiNodeDriverRegistrar.resources | nindent 12 }}
 
         # liveness probe
         {{- if .Values.node.livenessProbe }}
@@ -189,7 +188,6 @@ spec:
           volumeMounts:
             - name: plugin-dir
               mountPath: /csi
-          resources: {{ toYaml .Values.csiLivenessProbe.resources | nindent 12 }}
         {{- end }}
 
       volumes:

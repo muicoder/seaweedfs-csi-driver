@@ -2,7 +2,7 @@ name: dev Docker images
 
 on:
   push:
-    branches: [master]
+    branches: [masterNot]
 
   # Build on PR
   pull_request:
