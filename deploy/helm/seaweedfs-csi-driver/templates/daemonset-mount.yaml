@@ -72,7 +72,6 @@ spec:
             - name: mount-socket-dir
               mountPath: {{ $mountSocketDir }}
             {{- end }}
-          resources: {{ toYaml .Values.mountService.resources | nindent 12 }}
       volumes:
         - name: plugins-dir
           hostPath:

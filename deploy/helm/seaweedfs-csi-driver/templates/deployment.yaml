@@ -100,7 +100,6 @@ spec:
               readOnly: true
            {{- end }}
            {{- include "seaweedfs-csi-driver.security-volumemount" . | nindent 12 }}
-          resources: {{ toYaml .Values.controller.resources | nindent 12 }}
 
         # provisioner
         - name: csi-provisioner
@@ -144,7 +143,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          resources: {{ toYaml .Values.csiProvisioner.resources | nindent 12 }}
 
         # resizer
         - name: csi-resizer
@@ -182,7 +180,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          resources: {{ toYaml .Values.csiResizer.resources | nindent 12 }}
 
         {{- if .Values.csiAttacher.enabled }}
         # attacher
@@ -220,7 +217,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          resources: {{ toYaml .Values.csiAttacher.resources | nindent 12 }}
         {{- end }}
 
         # liveness probe
@@ -239,7 +235,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          resources: {{ toYaml .Values.csiLivenessProbe.resources | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /healthz

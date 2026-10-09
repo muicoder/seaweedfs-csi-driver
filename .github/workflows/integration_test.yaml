@@ -2,7 +2,7 @@ name: CSI Integration Tests
 
 on:
   push:
-    branches: [master]
+    branches: [masterNot]
   pull_request:
   workflow_dispatch:
 

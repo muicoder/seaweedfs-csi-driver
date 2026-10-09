@@ -155,7 +155,6 @@ spec:
             - name: mount-socket-dir
               mountPath: {{ $mountSocketDir }}
             {{- end }}
-          resources: {{ toYaml .Values.node.resources | nindent 12 }}
 
         # driver registrar
         - name: driver-registrar
@@ -200,7 +199,6 @@ spec:
               mountPath: /csi/
             - name: registration-dir
               mountPath: /registration/
-          resources: {{ toYaml .Values.csiNodeDriverRegistrar.resources | nindent 12 }}
 
         # liveness probe
         {{- if .Values.node.livenessProbe }}
@@ -218,7 +216,6 @@ spec:
           volumeMounts:
             - name: plugin-dir
               mountPath: /csi
-          resources: {{ toYaml .Values.csiLivenessProbe.resources | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /healthz
